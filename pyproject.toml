@@ -1,0 +1,31 @@
+[tool.poetry]
+name = "pd-flatten"
+version = "0.1.0"
+description = "Recursively flatten dictionaries in a Pandas data frame"
+authors = ["Devin McCabe <dmccabe@broadinstitute.org>"]
+readme = "README.md"
+keywords = ["pandas"]
+
+[tool.poetry.dependencies]
+python = ">=3.9"
+pandas = "^2.2"
+
+[tool.poetry.group.dev.dependencies]
+ruff = "^0.9.3"
+pyright = "^1.1.393"
+
+[tool.poetry.group.test.dependencies]
+pytest = "^8.3.4"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.ruff]
+select = [
+    "I",  # isort formatting
+]
+
+[tool.pyright]
+venvPath = "."
+venv = ".venv"
