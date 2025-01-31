@@ -358,3 +358,219 @@ class TestGraphqlOutput:
         )
 
         pd.testing.assert_frame_equal(observed, expected)
+
+    def test_one_with_empty_list(self):
+        df = pd.DataFrame(
+            [
+                {
+                    "model_id": "ACH-003093",
+                    "cell_line_name": "SU-DIPG-6",
+                    "stripped_cell_line_name": "SUDIPG6",
+                    "model_conditions": [
+                        {
+                            "model_condition_id": "MC-003093-nD4R",
+                            "omics_profiles": [],
+                        },
+                        {
+                            "model_condition_id": "MC-003093-jlhL",
+                            "omics_profiles": [
+                                {
+                                    "profile_id": "PR-Cx75w1",
+                                    "datatype": "wgs",
+                                    "blacklist_omics": False,
+                                    "omics_order_date": "2023-07-31",
+                                    "smid_ordered": "SM-NA1VM",
+                                    "smid_returned": "SM-MME96,SM-NG7S5",
+                                    "omics_sequencings": [
+                                        {
+                                            "blacklist": False,
+                                            "expected_type": "wgs",
+                                            "sequencing_id": "CDS-3wbI7z",
+                                            "source": "DEPMAP",
+                                            "version": 1,
+                                            "sequencing_alignments": [
+                                                {
+                                                    "id": 8891,
+                                                    "url": "gs://bucket-name/wgs_hg38_cram/CDS-3wbI7z.cram",
+                                                    "index_url": "gs://bucket-name/wgs_hg38_cram/CDS-3wbI7z.crai",
+                                                    "size": 19972004183,
+                                                    "reference_genome": "hg38",
+                                                    "sequencing_alignment_source": "GP",
+                                                },
+                                                {
+                                                    "id": 15823,
+                                                    "url": "gs://bucket-name/wgs_hg38/CDS-3wbI7z.hg38.bam",
+                                                    "index_url": "gs://bucket-name/wgs_hg38/CDS-3wbI7z.hg38.bai",
+                                                    "size": 81978444448,
+                                                    "reference_genome": "hg38",
+                                                    "sequencing_alignment_source": "CDS",
+                                                },
+                                            ],
+                                        }
+                                    ],
+                                },
+                                {
+                                    "profile_id": "PR-GIe5GE",
+                                    "datatype": "rna",
+                                    "blacklist_omics": False,
+                                    "omics_order_date": "2023-07-31",
+                                    "smid_ordered": "SM-NA1VM",
+                                    "smid_returned": None,
+                                    "omics_sequencings": [
+                                        {
+                                            "blacklist": False,
+                                            "expected_type": "rna",
+                                            "sequencing_id": "CDS-MaS6dz",
+                                            "source": "DEPMAP",
+                                            "version": 1,
+                                            "sequencing_alignments": [
+                                                {
+                                                    "id": 4771,
+                                                    "url": "gs://bucket-name/rna/CDS-MaS6dz.bam",
+                                                    "index_url": "gs://bucket-name/rna/CDS-MaS6dz.bai",
+                                                    "size": 5955045320,
+                                                    "reference_genome": "hg19",
+                                                    "sequencing_alignment_source": "GP",
+                                                },
+                                                {
+                                                    "id": 11876,
+                                                    "url": "gs://bucket-name/rnasq_hg38/CDS-MaS6dz.Aligned.sortedByCoord.out.bam",
+                                                    "index_url": "gs://bucket-name/rnasq_hg38/CDS-MaS6dz.Aligned.sortedByCoord.out.bam.bai",
+                                                    "size": 4967381407,
+                                                    "reference_genome": "hg38",
+                                                    "sequencing_alignment_source": "CDS",
+                                                },
+                                            ],
+                                        }
+                                    ],
+                                },
+                            ],
+                        },
+                    ],
+                }
+            ]
+        )
+
+        observed = pd_flatten(df, name_columns_with_parent=False)
+
+        expected = pd.DataFrame(
+            [
+                {
+                    "model_id": "ACH-003093",
+                    "cell_line_name": "SU-DIPG-6",
+                    "stripped_cell_line_name": "SUDIPG6",
+                    "model_condition_id": "MC-003093-nD4R",
+                    "profile_id": None,
+                    "datatype": None,
+                    "blacklist_omics": None,
+                    "omics_order_date": None,
+                    "smid_ordered": None,
+                    "smid_returned": None,
+                    "blacklist": None,
+                    "expected_type": None,
+                    "sequencing_id": None,
+                    "source": None,
+                    "version": None,
+                    "id": None,
+                    "url": None,
+                    "index_url": None,
+                    "size": None,
+                    "reference_genome": None,
+                    "sequencing_alignment_source": None,
+                },
+                {
+                    "model_id": "ACH-003093",
+                    "cell_line_name": "SU-DIPG-6",
+                    "stripped_cell_line_name": "SUDIPG6",
+                    "model_condition_id": "MC-003093-jlhL",
+                    "profile_id": "PR-Cx75w1",
+                    "datatype": "wgs",
+                    "blacklist_omics": False,
+                    "omics_order_date": "2023-07-31",
+                    "smid_ordered": "SM-NA1VM",
+                    "smid_returned": "SM-MME96,SM-NG7S5",
+                    "blacklist": False,
+                    "expected_type": "wgs",
+                    "sequencing_id": "CDS-3wbI7z",
+                    "source": "DEPMAP",
+                    "version": 1,
+                    "id": 8891,
+                    "url": "gs://bucket-name/wgs_hg38_cram/CDS-3wbI7z.cram",
+                    "index_url": "gs://bucket-name/wgs_hg38_cram/CDS-3wbI7z.crai",
+                    "size": 19972004183,
+                    "reference_genome": "hg38",
+                    "sequencing_alignment_source": "GP",
+                },
+                {
+                    "model_id": "ACH-003093",
+                    "cell_line_name": "SU-DIPG-6",
+                    "stripped_cell_line_name": "SUDIPG6",
+                    "model_condition_id": "MC-003093-jlhL",
+                    "profile_id": "PR-Cx75w1",
+                    "datatype": "wgs",
+                    "blacklist_omics": False,
+                    "omics_order_date": "2023-07-31",
+                    "smid_ordered": "SM-NA1VM",
+                    "smid_returned": "SM-MME96,SM-NG7S5",
+                    "blacklist": False,
+                    "expected_type": "wgs",
+                    "sequencing_id": "CDS-3wbI7z",
+                    "source": "DEPMAP",
+                    "version": 1,
+                    "id": 15823,
+                    "url": "gs://bucket-name/wgs_hg38/CDS-3wbI7z.hg38.bam",
+                    "index_url": "gs://bucket-name/wgs_hg38/CDS-3wbI7z.hg38.bai",
+                    "size": 81978444448,
+                    "reference_genome": "hg38",
+                    "sequencing_alignment_source": "CDS",
+                },
+                {
+                    "model_id": "ACH-003093",
+                    "cell_line_name": "SU-DIPG-6",
+                    "stripped_cell_line_name": "SUDIPG6",
+                    "model_condition_id": "MC-003093-jlhL",
+                    "profile_id": "PR-GIe5GE",
+                    "datatype": "rna",
+                    "blacklist_omics": False,
+                    "omics_order_date": "2023-07-31",
+                    "smid_ordered": "SM-NA1VM",
+                    "smid_returned": None,
+                    "blacklist": False,
+                    "expected_type": "rna",
+                    "sequencing_id": "CDS-MaS6dz",
+                    "source": "DEPMAP",
+                    "version": 1,
+                    "id": 4771,
+                    "url": "gs://bucket-name/rna/CDS-MaS6dz.bam",
+                    "index_url": "gs://bucket-name/rna/CDS-MaS6dz.bai",
+                    "size": 5955045320,
+                    "reference_genome": "hg19",
+                    "sequencing_alignment_source": "GP",
+                },
+                {
+                    "model_id": "ACH-003093",
+                    "cell_line_name": "SU-DIPG-6",
+                    "stripped_cell_line_name": "SUDIPG6",
+                    "model_condition_id": "MC-003093-jlhL",
+                    "profile_id": "PR-GIe5GE",
+                    "datatype": "rna",
+                    "blacklist_omics": False,
+                    "omics_order_date": "2023-07-31",
+                    "smid_ordered": "SM-NA1VM",
+                    "smid_returned": None,
+                    "blacklist": False,
+                    "expected_type": "rna",
+                    "sequencing_id": "CDS-MaS6dz",
+                    "source": "DEPMAP",
+                    "version": 1,
+                    "id": 11876,
+                    "url": "gs://bucket-name/rnasq_hg38/CDS-MaS6dz.Aligned.sortedByCoord.out.bam",
+                    "index_url": "gs://bucket-name/rnasq_hg38/CDS-MaS6dz.Aligned.sortedByCoord.out.bam.bai",
+                    "size": 4967381407,
+                    "reference_genome": "hg38",
+                    "sequencing_alignment_source": "CDS",
+                },
+            ]
+        )
+
+        pd.testing.assert_frame_equal(observed, expected)

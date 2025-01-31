@@ -42,6 +42,10 @@ def pd_flatten(
             if c not in except_cols and bool(
                 this_df[c].apply(lambda x: isinstance(x, dict)).any()
             ):
+                # replace NA's with empty dictionaries so that `pd.Series` doesn't
+                # create an extraneous series named `0`
+                this_df[c] = this_df[c].fillna(pd.Series([{}] * len(df)))
+
                 expanded = this_df[c].apply(pd.Series)
 
                 if name_columns_with_parent:
