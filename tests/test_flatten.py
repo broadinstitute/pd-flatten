@@ -69,6 +69,22 @@ class TestListExplosion:
 
         pd.testing.assert_frame_equal(observed, expected)
 
+    def test_list_of_nested_dict(self):
+        df = pd.DataFrame([{"a": 0, "b": {"c": {"i": 1}}}])
+
+        observed = pd_flatten(df, name_columns_with_parent=False)
+        expected = pd.DataFrame([{"a": 0, "i": 1}])
+
+        pd.testing.assert_frame_equal(observed, expected)
+
+    def test_list_of_nested_dict_with_list(self):
+        df = pd.DataFrame([{"a": 0, "b": {"c": [{"i": 1}]}}])
+
+        observed = pd_flatten(df, name_columns_with_parent=False)
+        expected = pd.DataFrame([{"a": 0, "i": 1}])
+
+        pd.testing.assert_frame_equal(observed, expected)
+
     def test_single_nested_list_with_empty(self):
         df = pd.DataFrame([{"a": 0, "b": [{"i": 1}, None]}])
 

@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from typing import Tuple
+
 import pandas as pd
 
 
@@ -28,31 +30,38 @@ def pd_flatten(
     if except_cols is None:
         except_cols = []
 
-    def do_explode_lists(this_df: pd.DataFrame) -> pd.DataFrame:
+    def do_explode_lists(this_df: pd.DataFrame) -> Tuple[pd.DataFrame, bool]:
         """
         Check each column of a data frame for lists and explode those values to separate
         rows.
 
         :param this_df: a data frame
-        :return: the data frame with list values exploded to separate rows
+        :return: a tuple of the data frame with list values exploded to separate rows
+        and an indicator of whether any lists were exploded
         """
+
+        changed = False
 
         for c in this_df.columns:
             if c not in except_cols and bool(
                 this_df[c].apply(lambda x: isinstance(x, list)).any()
             ):
                 this_df = this_df.explode(c).reset_index(drop=True)
+                changed = True
 
-        return this_df
+        return this_df, changed
 
-    def do_expand_dicts(this_df: pd.DataFrame) -> pd.DataFrame:
+    def do_expand_dicts(this_df: pd.DataFrame) -> Tuple[pd.DataFrame, bool]:
         """
         Check each column of a data frame for dictionaries and expand those values to
         separate columns.
 
         :param this_df: a data frame
-        :return: the data frame with list values expanded to separate columns
+        :return: a tuple of the data frame with list values expanded to separate columns
+        and an indicator of whether any dicts were expanded
         """
+
+        changed = False
 
         for c in this_df.columns:
             if c not in except_cols and bool(
@@ -81,17 +90,21 @@ def pd_flatten(
 
                 this_df = this_df.drop(columns=[c]).join(expanded)
 
-        return this_df
+                changed = True
 
-    prev_shape = None
+        return this_df, changed
 
-    while prev_shape != df.shape:
-        # continue iterating until we the number of rows and cols is unchanged
-        prev_shape = df.shape
+    changed_lists = True
+    changed_dicts = True
 
+    while changed_lists or changed_dicts:
+        changed_lists = False
+        changed_dicts = False
+
+        # continue iterating until the number of rows and cols is unchanged
         if explode_lists:
-            df = do_explode_lists(df)
+            df, changed_lists = do_explode_lists(df)
         if expand_dicts:
-            df = do_expand_dicts(df)
+            df, changed_dicts = do_expand_dicts(df)
 
     return df
